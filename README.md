@@ -23,3 +23,17 @@ cd docs/
 bun install
 bun run dev
 ```
+2-Stage Op-Amp Performance Summary
+=====================================
+
+DC Gain:              47.42 dB   (Target: ≥20 dB)  PASS
+Input Offset:         0.774 mV   (Target: ≤5 mV)   PASS
+CMRR:                 _____ dB   (Target: ≥40 dB)
+Input Impedance:      _____ MΩ   (Target: ≥1 MΩ)
+Output Impedance:     _____ kΩ   (Target: ≤1 kΩ)
+Power Consumption:    0.324 mW   (Target: ≤5 mW)   PASS
+3dB Bandwidth:        _____ MHz
+
+GBW Product:          _____ MHz
+
+PASS/FAIL: TBD
