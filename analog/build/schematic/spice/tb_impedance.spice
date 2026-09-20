@@ -1,0 +1,62 @@
+** sch_path: /workspace/analog/build/schematic/tb_impedance.sch
+**.subckt tb_impedance
+x1 net1 net3 vout net2 net2 net4 net5 opamp_two_stage
+VDD net1 GND 1.8
+VCM net2 GND 0.9
+VBIAS_N net4 GND 0.56
+VSS net5 GND 0
+IOUT vout GND dc 0 ac 1
+**** begin user architecture code
+
+.param mc_mm_switch=0
+.param mc_pr_switch=0
+.include /root/.volare/sky130A/libs.tech/ngspice/corners/tt.spice
+.include /root/.volare/sky130A/libs.tech/ngspice/r+c/res_typical__cap_typical.spice
+.include /root/.volare/sky130A/libs.tech/ngspice/r+c/res_typical__cap_typical__lin.spice
+.include /root/.volare/sky130A/libs.tech/ngspice/corners/tt/specialized_cells.spice
+
+
+
+.control
+ac dec 100 1 1e6
+let zout_mag = mag(v(vout))
+meas ac zout_ohm FIND zout_mag AT=1
+let zout_kohm = zout_ohm/1e3
+print zout_ohm
+print zout_kohm
+.endc
+
+
+**** end user architecture code
+**.ends
+
+* expanding   symbol:  opamp_two_stage.sym # of pins=7
+** sym_path: /workspace/analog/build/schematic/opamp_two_stage.sym
+** sch_path: /workspace/analog/build/schematic/opamp_two_stage.sch
+.subckt opamp_two_stage VDD VSTAGE1 VOUT VIN_P VIN_N VBIASN VSS
+*.ipin VIN_P
+*.ipin VIN_N
+*.opin VSTAGE1
+*.iopin VDD
+*.iopin VSS
+*.opin VOUT
+*.ipin VBIASN
+XM1 net1 VIN_P net2 GND sky130_fd_pr__nfet_01v8 L=0.15 W=1 nf=1 ad='int((nf+1)/2) * W/nf * 0.29' as='int((nf+2)/2) * W/nf * 0.29' pd='2*int((nf+1)/2) * (W/nf + 0.29)'
++ ps='2*int((nf+2)/2) * (W/nf + 0.29)' nrd='0.29 / W' nrs='0.29 / W' sa=0 sb=0 sd=0 mult=1 m=1
+XM2 VSTAGE1 VIN_N net2 GND sky130_fd_pr__nfet_01v8 L=0.15 W=1 nf=1 ad='int((nf+1)/2) * W/nf * 0.29' as='int((nf+2)/2) * W/nf * 0.29'
++ pd='2*int((nf+1)/2) * (W/nf + 0.29)' ps='2*int((nf+2)/2) * (W/nf + 0.29)' nrd='0.29 / W' nrs='0.29 / W' sa=0 sb=0 sd=0 mult=1 m=1
+XM3 net1 net1 VDD VDD sky130_fd_pr__pfet_01v8 L=0.15 W=1 nf=1 ad='int((nf+1)/2) * W/nf * 0.29' as='int((nf+2)/2) * W/nf * 0.29' pd='2*int((nf+1)/2) * (W/nf + 0.29)'
++ ps='2*int((nf+2)/2) * (W/nf + 0.29)' nrd='0.29 / W' nrs='0.29 / W' sa=0 sb=0 sd=0 mult=1 m=1
+XM4 VSTAGE1 net1 VDD VDD sky130_fd_pr__pfet_01v8 L=0.15 W=1 nf=1 ad='int((nf+1)/2) * W/nf * 0.29' as='int((nf+2)/2) * W/nf * 0.29'
++ pd='2*int((nf+1)/2) * (W/nf + 0.29)' ps='2*int((nf+2)/2) * (W/nf + 0.29)' nrd='0.29 / W' nrs='0.29 / W' sa=0 sb=0 sd=0 mult=1 m=1
+XM5 net2 VBIASN VSS GND sky130_fd_pr__nfet_01v8 L=0.15 W=1 nf=1 ad='int((nf+1)/2) * W/nf * 0.29' as='int((nf+2)/2) * W/nf * 0.29' pd='2*int((nf+1)/2) * (W/nf + 0.29)'
++ ps='2*int((nf+2)/2) * (W/nf + 0.29)' nrd='0.29 / W' nrs='0.29 / W' sa=0 sb=0 sd=0 mult=1 m=1
+Cc VSTAGE1 VOUT 1p m=1
+XM6 VOUT VSTAGE1 VDD VDD sky130_fd_pr__pfet_01v8 L=0.15 W=1 nf=1 ad='int((nf+1)/2) * W/nf * 0.29' as='int((nf+2)/2) * W/nf * 0.29'
++ pd='2*int((nf+1)/2) * (W/nf + 0.29)' ps='2*int((nf+2)/2) * (W/nf + 0.29)' nrd='0.29 / W' nrs='0.29 / W' sa=0 sb=0 sd=0 mult=1 m=1
+XM7 VOUT VBIASN VSS GND sky130_fd_pr__nfet_01v8 L=0.15 W=1 nf=1 ad='int((nf+1)/2) * W/nf * 0.29' as='int((nf+2)/2) * W/nf * 0.29' pd='2*int((nf+1)/2) * (W/nf + 0.29)'
++ ps='2*int((nf+2)/2) * (W/nf + 0.29)' nrd='0.29 / W' nrs='0.29 / W' sa=0 sb=0 sd=0 mult=1 m=1
+.ends
+
+.GLOBAL GND
+.end
